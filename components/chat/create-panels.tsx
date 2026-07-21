@@ -2,9 +2,8 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Field } from "@/components/ui/field";
-import { Input, Textarea } from "@/components/ui/input";
+import { Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { Avatar } from "@/components/ui/avatar";
 import { useDictionary, useLocale } from "@/components/i18n/locale-provider";
 import { localizedPath } from "@/i18n/path";
@@ -64,35 +63,38 @@ export function DirectCreatePanel() {
   }
 
   return (
-    <div className="border-b border-line p-4">
-      <Field label={t.chat.startDirect}>
-        <Input
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={t.chat.searchPeople}
-        />
-      </Field>
-      {error ? <p className="mt-2 text-sm text-danger">{error}</p> : null}
-      <ul className="mt-3 max-h-48 space-y-1 overflow-y-auto">
-        {users.map((person) => (
-          <li key={person.id}>
-            <button
-              type="button"
-              disabled={pending}
-              onClick={() => void startDirect(person.id)}
-              className="flex w-full items-center gap-3 rounded-[var(--ds-radius-sm)] px-2 py-2 text-start hover:bg-ink-soft"
-            >
-              <Avatar name={person.name} image={person.image} size="sm" />
-              <span className="min-w-0">
-                <span className="block truncate text-sm">{person.name}</span>
-                <span className="block font-mono text-[11px] text-mist">
-                  @{person.handle}
+    <div className="px-3 pb-2 pt-5">
+      <Input
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+        placeholder={t.chat.searchPeople}
+        className="h-11 rounded-2xl border-0 bg-ink px-4"
+      />
+      {error ? <p className="mt-2 px-1 text-sm text-danger">{error}</p> : null}
+      {query.trim() || users.length > 0 ? (
+        <ul className="mt-2 max-h-44 space-y-0.5 overflow-y-auto">
+          {users.map((person) => (
+            <li key={person.id}>
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() => void startDirect(person.id)}
+                className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-start transition-colors hover:bg-ink"
+              >
+                <Avatar name={person.name} image={person.image} size="sm" />
+                <span className="min-w-0">
+                  <span className="block truncate text-sm text-bone">
+                    {person.name}
+                  </span>
+                  <span className="block truncate text-xs text-mist">
+                    @{person.handle}
+                  </span>
                 </span>
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 }
@@ -101,8 +103,8 @@ export function RoomCreatePanel() {
   const router = useRouter();
   const { locale } = useLocale();
   const t = useDictionary();
+  const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [discover, setDiscover] = useState<
@@ -114,15 +116,13 @@ export function RoomCreatePanel() {
     }>
   >([]);
 
-  async function loadDiscover() {
-    const response = await fetch("/api/rooms?scope=discover");
-    if (!response.ok) return;
-    const data = await response.json();
-    setDiscover(data.rooms ?? []);
-  }
-
   useEffect(() => {
-    void loadDiscover();
+    void (async () => {
+      const response = await fetch("/api/rooms?scope=discover");
+      if (!response.ok) return;
+      const data = await response.json();
+      setDiscover(data.rooms ?? []);
+    })();
   }, []);
 
   async function onCreate(event: FormEvent) {
@@ -133,12 +133,12 @@ export function RoomCreatePanel() {
       const response = await fetch("/api/rooms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, description, isPublic: true }),
+        body: JSON.stringify({ title, isPublic: true }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Failed");
       setTitle("");
-      setDescription("");
+      setOpen(false);
       router.push(localizedPath(locale, `/chat/rooms/${data.id}`));
       router.refresh();
     } catch (err) {
@@ -164,64 +164,63 @@ export function RoomCreatePanel() {
   }
 
   return (
-    <div className="space-y-4 border-b border-line p-4">
-      <form onSubmit={onCreate} className="space-y-3">
-        <Field label={t.chat.createRoom}>
+    <div className="space-y-3 px-3 pb-2 pt-5">
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        className="flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-ink text-sm text-bone transition hover:bg-ink-soft"
+      >
+        <Plus className="h-4 w-4 text-bone-muted" />
+        {t.chat.createRoom}
+      </button>
+
+      {open ? (
+        <form onSubmit={onCreate} className="space-y-2">
           <Input
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             placeholder={t.chat.roomTitle}
             required
+            className="h-11 rounded-2xl border-0 bg-ink px-4"
           />
-        </Field>
-        <Textarea
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-          placeholder={t.chat.roomPurpose}
-        />
-        {error ? <p className="text-sm text-danger">{error}</p> : null}
-        <Button type="submit" variant="signal" disabled={pending} className="w-full">
-          {t.chat.openRoom}
-        </Button>
-      </form>
+          <button
+            type="submit"
+            disabled={pending}
+            className="h-10 w-full rounded-2xl bg-signal text-sm font-semibold text-onsignal disabled:opacity-40"
+          >
+            {t.chat.openRoom}
+          </button>
+        </form>
+      ) : null}
 
-      <div>
-        <p className="ds-kicker mb-2">{t.chat.discover}</p>
-        <ul className="max-h-40 space-y-1 overflow-y-auto">
+      {error ? <p className="px-1 text-sm text-danger">{error}</p> : null}
+
+      {discover.length > 0 ? (
+        <ul className="max-h-36 space-y-0.5 overflow-y-auto">
           {discover.map((room) => (
-            <li
-              key={room.id}
-              className="flex items-center justify-between gap-2 rounded-[var(--ds-radius-sm)] px-2 py-2 hover:bg-ink-soft"
-            >
-              <div className="min-w-0">
-                <p className="truncate text-sm">{room.title}</p>
-                <p className="truncate text-xs text-mist">
-                  {room.description ?? t.chat.publicRoom}
-                </p>
-              </div>
-              {room.joined ? (
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() =>
-                    router.push(localizedPath(locale, `/chat/rooms/${room.id}`))
-                  }
-                >
-                  {t.chat.open}
-                </Button>
-              ) : (
-                <Button
-                  size="sm"
-                  variant="line"
-                  onClick={() => void join(room.id)}
-                >
-                  {t.chat.join}
-                </Button>
-              )}
+            <li key={room.id}>
+              <button
+                type="button"
+                onClick={() =>
+                  room.joined
+                    ? router.push(
+                        localizedPath(locale, `/chat/rooms/${room.id}`),
+                      )
+                    : void join(room.id)
+                }
+                className="flex w-full items-center justify-between gap-2 rounded-2xl px-3 py-2.5 text-start transition hover:bg-ink"
+              >
+                <span className="min-w-0 truncate text-sm text-bone">
+                  {room.title}
+                </span>
+                <span className="shrink-0 text-xs text-bone-muted">
+                  {room.joined ? t.chat.open : t.chat.join}
+                </span>
+              </button>
             </li>
           ))}
         </ul>
-      </div>
+      ) : null}
     </div>
   );
 }
@@ -230,8 +229,8 @@ export function GroupCreatePanel() {
   const router = useRouter();
   const { locale } = useLocale();
   const t = useDictionary();
+  const [mode, setMode] = useState<"idle" | "create" | "join">("idle");
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [inviteCode, setInviteCode] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -244,7 +243,7 @@ export function GroupCreatePanel() {
       const response = await fetch("/api/groups", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, description }),
+        body: JSON.stringify({ title }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Failed");
@@ -279,40 +278,63 @@ export function GroupCreatePanel() {
   }
 
   return (
-    <div className="space-y-5 border-b border-line p-4">
-      <form onSubmit={onCreate} className="space-y-3">
-        <Field label={t.chat.createGroup}>
+    <div className="space-y-2 px-3 pb-2 pt-5">
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={() => setMode(mode === "create" ? "idle" : "create")}
+          className="h-11 rounded-2xl bg-ink text-sm text-bone transition hover:bg-ink-soft"
+        >
+          {t.chat.createGroup}
+        </button>
+        <button
+          type="button"
+          onClick={() => setMode(mode === "join" ? "idle" : "join")}
+          className="h-11 rounded-2xl bg-ink text-sm text-bone transition hover:bg-ink-soft"
+        >
+          {t.chat.joinInvite}
+        </button>
+      </div>
+
+      {mode === "create" ? (
+        <form onSubmit={onCreate} className="space-y-2">
           <Input
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             placeholder={t.chat.groupName}
             required
+            className="h-11 rounded-2xl border-0 bg-ink px-4"
           />
-        </Field>
-        <Textarea
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-          placeholder={t.chat.privatePurpose}
-        />
-        <Button type="submit" variant="signal" disabled={pending} className="w-full">
-          {t.chat.createGroup}
-        </Button>
-      </form>
+          <button
+            type="submit"
+            disabled={pending}
+            className="h-10 w-full rounded-2xl bg-signal text-sm font-semibold text-onsignal disabled:opacity-40"
+          >
+            {t.chat.createGroup}
+          </button>
+        </form>
+      ) : null}
 
-      <form onSubmit={onJoin} className="space-y-3">
-        <Field label={t.chat.joinInvite}>
+      {mode === "join" ? (
+        <form onSubmit={onJoin} className="space-y-2">
           <Input
             value={inviteCode}
             onChange={(event) => setInviteCode(event.target.value)}
             placeholder={t.chat.inviteCode}
             required
+            className="h-11 rounded-2xl border-0 bg-ink px-4"
           />
-        </Field>
-        <Button type="submit" variant="line" disabled={pending} className="w-full">
-          {t.chat.enterGroup}
-        </Button>
-      </form>
-      {error ? <p className="text-sm text-danger">{error}</p> : null}
+          <button
+            type="submit"
+            disabled={pending}
+            className="h-10 w-full rounded-2xl bg-signal text-sm font-semibold text-onsignal disabled:opacity-40"
+          >
+            {t.chat.enterGroup}
+          </button>
+        </form>
+      ) : null}
+
+      {error ? <p className="px-1 text-sm text-danger">{error}</p> : null}
     </div>
   );
 }

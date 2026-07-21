@@ -8,6 +8,7 @@ import { requireSession } from "@/lib/session";
 import { ChatThread } from "@/components/chat/chat-thread";
 import { ConversationList } from "@/components/chat/conversation-list";
 import { DirectCreatePanel } from "@/components/chat/create-panels";
+import { ChatSidebar } from "@/components/chat/chat-shell";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 
@@ -33,20 +34,20 @@ export default async function DirectThreadPage({
 
   return (
     <div className="flex h-full min-h-0">
-      <div className="hidden w-[var(--ds-chat-rail)] shrink-0 flex-col border-e border-line bg-ink-elevated md:flex">
-        <DirectCreatePanel />
-        <ConversationList
-          system="direct"
-          items={conversations}
-          emptyLabel={dict.chat.directEmpty}
-        />
-      </div>
+      <ChatSidebar className="hidden md:flex">
+          <DirectCreatePanel />
+          <ConversationList
+            system="direct"
+            items={conversations}
+            emptyLabel={dict.chat.directEmpty}
+          />
+        </ChatSidebar>
       <ChatThread
         conversationId={conversation.id}
         title={conversation.displayTitle}
         subtitle={
           conversation.peer
-            ? `@${conversation.peer.handle} · ${dict.chat.privateChannel}`
+            ? `@${conversation.peer.handle}`
             : dict.chat.privateChannel
         }
         systemLabel={dict.chat.direct}

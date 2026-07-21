@@ -8,6 +8,7 @@ import { requireSession } from "@/lib/session";
 import { ChatThread } from "@/components/chat/chat-thread";
 import { ConversationList } from "@/components/chat/conversation-list";
 import { RoomCreatePanel } from "@/components/chat/create-panels";
+import { ChatSidebar } from "@/components/chat/chat-shell";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 
@@ -33,20 +34,20 @@ export default async function RoomThreadPage({
 
   return (
     <div className="flex h-full min-h-0">
-      <div className="hidden w-[var(--ds-chat-rail)] shrink-0 flex-col border-e border-line bg-ink-elevated md:flex">
-        <RoomCreatePanel />
-        <ConversationList
-          system="room"
-          items={conversations}
-          emptyLabel={dict.chat.roomsEmpty}
-        />
-      </div>
+      <ChatSidebar className="hidden md:flex">
+          <RoomCreatePanel />
+          <ConversationList
+            system="room"
+            items={conversations}
+            emptyLabel={dict.chat.roomsEmpty}
+          />
+        </ChatSidebar>
       <ChatThread
         conversationId={conversation.id}
         title={conversation.displayTitle}
         subtitle={
           conversation.description ??
-          `#${conversation.slug ?? "room"} · ${conversation.members.length} ${dict.chat.members}`
+          `${conversation.members.length} ${dict.chat.members}`
         }
         systemLabel={dict.chat.rooms}
         currentUserId={session.user.id}

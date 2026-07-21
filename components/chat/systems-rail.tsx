@@ -1,11 +1,10 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { Hash, LogOut, MessagesSquare, Radio, Users } from "lucide-react";
+import { Hash, LogOut, MessagesSquare, Users } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { LocaleLink } from "@/components/i18n/locale-link";
 import { useDictionary, useLocale } from "@/components/i18n/locale-provider";
@@ -32,41 +31,34 @@ export function SystemsRail({
       key: "direct",
       href: "/chat/direct",
       label: t.chat.direct,
-      hint: t.chat.directHint,
       icon: MessagesSquare,
     },
     {
       key: "rooms",
       href: "/chat/rooms",
       label: t.chat.rooms,
-      hint: t.chat.roomsHint,
       icon: Hash,
     },
     {
       key: "groups",
       href: "/chat/groups",
       label: t.chat.groups,
-      hint: t.chat.groupsHint,
       icon: Users,
     },
   ] as const;
 
   return (
     <>
-      <aside className="hidden h-full w-[5.25rem] shrink-0 flex-col border-e border-line bg-ink-elevated lg:flex xl:w-[16rem]">
-        <div className="border-b border-line px-3 py-4 xl:px-5">
-          <LocaleLink href="/chat" className="flex items-center gap-2">
-            <span className="ds-live-dot" />
-            <span className="font-display text-lg tracking-tight xl:text-xl">
-              Pulse
-            </span>
-          </LocaleLink>
-          <p className="mt-2 hidden text-xs text-mist xl:block">
-            {t.chat.brandHint}
-          </p>
-        </div>
+      <aside className="hidden h-full w-[4.5rem] shrink-0 flex-col items-center bg-ink py-6 lg:flex">
+        <LocaleLink
+          href="/chat"
+          className="mb-10 flex items-center justify-center"
+          aria-label="Pulse"
+        >
+          <span className="ds-live-dot" />
+        </LocaleLink>
 
-        <nav className="flex flex-1 flex-col gap-1 p-2 xl:p-3">
+        <nav className="flex flex-1 flex-col items-center gap-2">
           {systems.map((system) => {
             const active = pathnameWithoutLocale.startsWith(system.href);
             const Icon = system.icon;
@@ -74,49 +66,29 @@ export function SystemsRail({
               <LocaleLink
                 key={system.key}
                 href={system.href}
+                title={system.label}
+                aria-label={system.label}
                 className={cn(
-                  "group flex items-center gap-3 rounded-[var(--ds-radius-sm)] px-2.5 py-3 transition-colors",
+                  "relative flex h-11 w-11 items-center justify-center rounded-2xl transition-colors",
                   active
                     ? "bg-signal text-onsignal"
-                    : "text-bone hover:bg-ink-soft",
+                    : "text-mist hover:bg-ink-soft hover:text-bone",
                 )}
               >
-                <Icon className="mx-auto h-5 w-5 shrink-0 xl:mx-0" />
-                <span className="hidden min-w-0 xl:block">
-                  <span className="block text-sm font-semibold">
-                    {system.label}
-                  </span>
-                  <span
-                    className={cn(
-                      "block text-xs",
-                      active ? "text-onsignal/80" : "text-mist",
-                    )}
-                  >
-                    {system.hint}
-                  </span>
-                </span>
+                <Icon className="h-[1.15rem] w-[1.15rem]" strokeWidth={1.75} />
               </LocaleLink>
             );
           })}
         </nav>
 
-        <div className="mt-auto border-t border-line p-3">
-          <div className="mb-3 hidden xl:block">
-            <LanguageSwitcher compact className="w-full justify-between" />
-          </div>
-          <div className="mb-3 hidden items-center gap-3 xl:flex">
-            <Avatar name={user.name} image={user.image} />
-            <div className="min-w-0">
-              <p className="truncate text-sm font-medium">{user.name}</p>
-              <p className="truncate font-mono text-[11px] text-mist">
-                @{user.handle ?? user.email.split("@")[0]}
-              </p>
-            </div>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full justify-center xl:justify-start"
+        <div className="mt-auto flex flex-col items-center gap-4">
+          <LanguageSwitcher compact className="border-0 bg-transparent p-0" />
+          <Avatar name={user.name} image={user.image} size="sm" />
+          <button
+            type="button"
+            title={t.chat.signOut}
+            aria-label={t.chat.signOut}
+            className="flex h-10 w-10 items-center justify-center rounded-2xl text-mist transition-colors hover:bg-ink-soft hover:text-bone"
             onClick={async () => {
               await authClient.signOut();
               router.push(localizedPath(locale, "/login"));
@@ -124,12 +96,11 @@ export function SystemsRail({
             }}
           >
             <LogOut className="h-4 w-4" />
-            <span className="hidden xl:inline">{t.chat.signOut}</span>
-          </Button>
+          </button>
         </div>
       </aside>
 
-      <nav className="fixed inset-x-0 bottom-0 z-[var(--ds-z-nav)] grid grid-cols-3 border-t border-line bg-ink/95 backdrop-blur-md lg:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-[var(--ds-z-nav)] grid grid-cols-3 bg-ink/90 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl lg:hidden">
         {systems.map((system) => {
           const active = pathnameWithoutLocale.startsWith(system.href);
           const Icon = system.icon;
@@ -138,24 +109,24 @@ export function SystemsRail({
               key={system.key}
               href={system.href}
               className={cn(
-                "flex flex-col items-center gap-1 px-2 py-3 text-[11px] tracking-[0.08em]",
-                active ? "text-signal" : "text-mist",
+                "flex flex-col items-center gap-1 rounded-2xl py-2 text-[11px]",
+                active ? "text-bone" : "text-mist",
               )}
             >
-              <Icon className="h-4 w-4" />
+              <Icon className="h-4 w-4" strokeWidth={1.75} />
               {system.label}
             </LocaleLink>
           );
         })}
       </nav>
 
-      <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3 lg:hidden">
-        <LocaleLink href="/chat" className="flex items-center gap-2">
-          <Radio className="h-4 w-4 text-signal" />
-          <span className="font-display text-lg">Pulse</span>
-        </LocaleLink>
+      <div className="flex items-center justify-between px-5 py-4 lg:hidden">
         <div className="flex items-center gap-2">
-          <LanguageSwitcher compact />
+          <span className="ds-live-dot" />
+          <span className="font-display text-lg">Pulse</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher compact className="border-0 bg-transparent p-0" />
           <Avatar name={user.name} image={user.image} size="sm" />
         </div>
       </div>

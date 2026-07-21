@@ -1,37 +1,27 @@
 /**
- * PULSE Design System
- * -------------------
- * Single source of truth for visual language. Prefer these tokens over
- * one-off values so future features stay visually in sync.
- *
- * Direction: deep navy + ice + electric blue (not purple, not cream).
- *
- * Breakpoints (mobile-first):
- *   sm  640px   — large phones / small tablets
- *   md  768px   — tablets
- *   lg  1024px  — desktop (chat shell becomes 3-pane)
- *   xl  1280px  — wide desktop
+ * PULSE Design System — Quiet Luxury
+ * ----------------------------------
+ * Soft black, warm stone, platinum accent.
+ * Prefer emptiness over decoration. One accent at a time.
  */
 
 :root {
   --ds-brand: "Pulse";
 
-  /* Color — midnight navy / ice / electric blue
-     Filled controls use white on signal (high contrast). */
-  --ds-ink: #050a14;
-  --ds-ink-elevated: #0b1528;
-  --ds-ink-soft: #132038;
-  --ds-bone: #f3f7ff;
-  --ds-bone-muted: #b7c6e0;
-  --ds-mist: #8496b4;
-  --ds-line: rgba(170, 200, 255, 0.14);
-  --ds-line-strong: rgba(170, 200, 255, 0.32);
-  --ds-signal: #2f7bff;
-  --ds-signal-bright: #79b0ff;
-  --ds-on-signal: #ffffff;
-  --ds-glow: #5ec8ff;
-  --ds-danger: #ff6b7a;
-  --ds-success: #3ee0a5;
+  --ds-ink: #0b0b0c;
+  --ds-ink-elevated: #121214;
+  --ds-ink-soft: #1a1a1d;
+  --ds-bone: #f3f1ec;
+  --ds-bone-muted: #b6b3ab;
+  --ds-mist: #7c7a74;
+  --ds-line: rgba(243, 241, 236, 0.08);
+  --ds-line-strong: rgba(243, 241, 236, 0.16);
+  --ds-signal: #f3f1ec;
+  --ds-signal-bright: #c5c0b4;
+  --ds-on-signal: #0b0b0c;
+  --ds-glow: #2a2a2e;
+  --ds-danger: #d96b6b;
+  --ds-success: #6fbf9a;
 
   --ds-bg: var(--ds-ink);
   --ds-bg-elevated: var(--ds-ink-elevated);
@@ -41,26 +31,24 @@
   --ds-accent: var(--ds-signal);
   --ds-accent-fg: var(--ds-on-signal);
 
-  /* Typography — Unbounded display + Manrope body */
-  --ds-font-display: var(--font-unbounded), "Unbounded", sans-serif;
-  --ds-font-body: var(--font-manrope), "Manrope", sans-serif;
+  --ds-font-display: var(--font-instrument), "Instrument Serif", serif;
+  --ds-font-body: var(--font-jakarta), "Plus Jakarta Sans", sans-serif;
   --ds-font-fa: var(--font-vazirmatn), "Vazirmatn", sans-serif;
-  --ds-font-mono: var(--font-jetbrains), "JetBrains Mono", monospace;
+  --ds-font-mono: var(--font-jakarta), "Plus Jakarta Sans", sans-serif;
 
-  --ds-text-xs: clamp(0.7rem, 0.65rem + 0.2vw, 0.75rem);
-  --ds-text-sm: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
-  --ds-text-md: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
-  --ds-text-lg: clamp(1.15rem, 1rem + 0.55vw, 1.35rem);
-  --ds-text-xl: clamp(1.7rem, 1.2rem + 1.5vw, 2.6rem);
-  --ds-text-hero: clamp(2.8rem, 1.2rem + 6vw, 7.2rem);
+  --ds-text-xs: clamp(0.7rem, 0.66rem + 0.15vw, 0.75rem);
+  --ds-text-sm: clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
+  --ds-text-md: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+  --ds-text-lg: clamp(1.1rem, 1rem + 0.4vw, 1.25rem);
+  --ds-text-xl: clamp(1.6rem, 1.2rem + 1.2vw, 2.25rem);
+  --ds-text-hero: clamp(3rem, 1.4rem + 5.5vw, 6.75rem);
 
-  --ds-leading-tight: 0.94;
-  --ds-leading-snug: 1.18;
-  --ds-leading-body: 1.6;
-  --ds-tracking-display: -0.035em;
-  --ds-tracking-wide: 0.16em;
+  --ds-leading-tight: 0.96;
+  --ds-leading-snug: 1.2;
+  --ds-leading-body: 1.65;
+  --ds-tracking-display: -0.03em;
+  --ds-tracking-wide: 0.18em;
 
-  /* Space */
   --ds-space-1: 0.25rem;
   --ds-space-2: 0.5rem;
   --ds-space-3: 0.75rem;
@@ -68,27 +56,25 @@
   --ds-space-5: 1.5rem;
   --ds-space-6: 2rem;
   --ds-space-7: 3rem;
-  --ds-space-8: 4.5rem;
-  --ds-space-9: 7rem;
+  --ds-space-8: 5rem;
+  --ds-space-9: 8rem;
 
-  --ds-page-x: clamp(1.1rem, 4vw, 4.5rem);
+  --ds-page-x: clamp(1.25rem, 5vw, 5rem);
   --ds-page-y: clamp(1rem, 2.5vw, 2.5rem);
-  --ds-chat-rail: clamp(16rem, 24vw, 22rem);
+  --ds-chat-rail: clamp(16rem, 22vw, 20rem);
 
   --ds-radius-xs: 2px;
-  --ds-radius-sm: 8px;
-  --ds-radius-md: 14px;
-  --ds-radius-lg: 24px;
+  --ds-radius-sm: 999px;
+  --ds-radius-md: 18px;
+  --ds-radius-lg: 28px;
 
-  --ds-shadow-soft: 0 30px 90px rgba(4, 16, 40, 0.55);
-  --ds-shadow-glow: 0 0 80px rgba(76, 154, 255, 0.28);
-  --ds-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
-  --ds-grid-line: rgba(170, 200, 255, 0.05);
+  --ds-shadow-soft: 0 40px 100px rgba(0, 0, 0, 0.35);
+  --ds-shadow-glow: none;
 
-  --ds-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ds-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ds-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --ds-duration-fast: 160ms;
-  --ds-duration: 420ms;
+  --ds-duration-fast: 180ms;
+  --ds-duration: 500ms;
   --ds-duration-slow: 900ms;
 
   --ds-control-h: 2.85rem;
@@ -99,24 +85,23 @@
   --ds-z-toast: 60;
 }
 
-/* Hex literals so Tailwind utilities resolve reliably (no nested var issues). */
 @theme inline {
-  --color-ink: #050a14;
-  --color-ink-elevated: #0b1528;
-  --color-ink-soft: #132038;
-  --color-bone: #f3f7ff;
-  --color-bone-muted: #b7c6e0;
-  --color-mist: #8496b4;
-  --color-line: #aaccff24;
-  --color-line-strong: #aaccff52;
-  --color-signal: #2f7bff;
-  --color-signal-bright: #79b0ff;
-  --color-onsignal: #ffffff;
-  --color-glow: #5ec8ff;
-  --color-danger: #ff6b7a;
-  --color-success: #3ee0a5;
-  --color-background: #050a14;
-  --color-foreground: #f3f7ff;
+  --color-ink: #0b0b0c;
+  --color-ink-elevated: #121214;
+  --color-ink-soft: #1a1a1d;
+  --color-bone: #f3f1ec;
+  --color-bone-muted: #b6b3ab;
+  --color-mist: #7c7a74;
+  --color-line: #f3f1ec14;
+  --color-line-strong: #f3f1ec29;
+  --color-signal: #f3f1ec;
+  --color-signal-bright: #c5c0b4;
+  --color-onsignal: #0b0b0c;
+  --color-glow: #2a2a2e;
+  --color-danger: #d96b6b;
+  --color-success: #6fbf9a;
+  --color-background: #0b0b0c;
+  --color-foreground: #f3f1ec;
   --font-display: var(--ds-font-display);
   --font-sans: var(--ds-font-body);
   --font-mono: var(--ds-font-mono);

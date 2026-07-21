@@ -1,10 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowUp } from "lucide-react";
 import { useDictionary } from "@/components/i18n/locale-provider";
-import { cn } from "@/lib/utils";
 
 export function MessageComposer({
   conversationId,
@@ -46,16 +44,14 @@ export function MessageComposer({
     }
   }
 
+  const canSend = Boolean(body.trim()) && !pending;
+
   return (
     <form
       onSubmit={onSubmit}
-      className="border-t border-line bg-ink/80 px-4 py-3 backdrop-blur-md md:px-6"
+      className="mx-auto w-full max-w-2xl px-5 pb-5 md:px-8 md:pb-7"
     >
-      <div
-        className={cn(
-          "flex items-end gap-2 rounded-[var(--ds-radius-md)] border border-line bg-ink-elevated p-2",
-        )}
-      >
+      <div className="flex items-end gap-2 rounded-[1.75rem] bg-ink-elevated px-2 py-2">
         <textarea
           value={body}
           onChange={(event) => setBody(event.target.value)}
@@ -67,20 +63,20 @@ export function MessageComposer({
           }}
           rows={1}
           placeholder={t.chat.writeMessage}
-          className="max-h-36 min-h-[2.75rem] flex-1 resize-none bg-transparent px-2 py-2 text-bone outline-none placeholder:text-mist/70"
+          className="max-h-32 min-h-[2.75rem] flex-1 resize-none bg-transparent px-3 py-2.5 text-bone outline-none placeholder:text-mist/60"
         />
-        <Button
+        <button
           type="submit"
-          variant="signal"
-          size="sm"
-          disabled={pending || !body.trim()}
-          className="shrink-0"
+          disabled={!canSend}
+          aria-label={t.chat.send}
+          className="mb-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-signal text-onsignal transition disabled:cursor-not-allowed disabled:opacity-30"
         >
-          {t.chat.send}
-          <ArrowUpRight className="h-4 w-4" />
-        </Button>
+          <ArrowUp className="h-5 w-5" strokeWidth={2.25} />
+        </button>
       </div>
-      {error ? <p className="mt-2 text-sm text-danger">{error}</p> : null}
+      {error ? (
+        <p className="mt-2 px-3 text-sm text-danger">{error}</p>
+      ) : null}
     </form>
   );
 }

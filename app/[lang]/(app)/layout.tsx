@@ -21,7 +21,7 @@ export default async function AppLayout({
           handle: user.handle,
         }}
       />
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col pb-[4.25rem] lg:pb-0">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col pb-16 lg:pb-0">
         {children}
       </div>
     </div>

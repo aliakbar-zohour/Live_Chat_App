@@ -8,6 +8,7 @@ import { requireSession } from "@/lib/session";
 import { ChatThread } from "@/components/chat/chat-thread";
 import { ConversationList } from "@/components/chat/conversation-list";
 import { GroupCreatePanel } from "@/components/chat/create-panels";
+import { ChatSidebar } from "@/components/chat/chat-shell";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 
@@ -33,20 +34,20 @@ export default async function GroupThreadPage({
 
   return (
     <div className="flex h-full min-h-0">
-      <div className="hidden w-[var(--ds-chat-rail)] shrink-0 flex-col border-e border-line bg-ink-elevated md:flex">
-        <GroupCreatePanel />
-        <ConversationList
-          system="group"
-          items={conversations}
-          emptyLabel={dict.chat.groupsEmpty}
-        />
-      </div>
+      <ChatSidebar className="hidden md:flex">
+          <GroupCreatePanel />
+          <ConversationList
+            system="group"
+            items={conversations}
+            emptyLabel={dict.chat.groupsEmpty}
+          />
+        </ChatSidebar>
       <ChatThread
         conversationId={conversation.id}
         title={conversation.displayTitle}
         subtitle={
           conversation.description ??
-          `${conversation.members.length} ${dict.chat.members} · ${dict.chat.private}`
+          `${conversation.members.length} ${dict.chat.members}`
         }
         systemLabel={dict.chat.groups}
         currentUserId={session.user.id}

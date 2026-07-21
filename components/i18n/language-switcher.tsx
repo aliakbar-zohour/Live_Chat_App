@@ -15,10 +15,7 @@ export function LanguageSwitcher({
 
   return (
     <div
-      className={cn(
-        "inline-flex items-center gap-1 rounded-[var(--ds-radius-sm)] border border-line bg-ink-elevated/80 p-1",
-        className,
-      )}
+      className={cn("inline-flex items-center gap-0.5", className)}
       role="group"
       aria-label={dictionary.nav.language}
     >
@@ -31,10 +28,10 @@ export function LanguageSwitcher({
             disabled={transitioning}
             onClick={() => switchLocale(item as Locale)}
             className={cn(
-              "min-w-10 rounded-[calc(var(--ds-radius-sm)-2px)] px-2.5 py-1.5 text-xs font-semibold transition-colors",
+              "rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide transition-colors",
               active
                 ? "bg-signal text-onsignal"
-                : "text-mist hover:bg-ink-soft hover:text-bone",
+                : "text-mist hover:text-bone",
             )}
           >
             {compact ? item.toUpperCase() : localeNames[item]}

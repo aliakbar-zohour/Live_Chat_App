@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { JetBrains_Mono, Manrope, Unbounded, Vazirmatn } from "next/font/google";
+import {
+  Instrument_Serif,
+  Plus_Jakarta_Sans,
+  Vazirmatn,
+} from "next/font/google";
 import {
   defaultLocale,
   getDirection,
@@ -10,34 +14,28 @@ import {
 } from "@/i18n/config";
 import "./globals.css";
 
-const unbounded = Unbounded({
-  variable: "--font-unbounded",
+const instrument = Instrument_Serif({
+  variable: "--font-instrument",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400"],
+  style: ["normal", "italic"],
 });
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 const vazirmatn = Vazirmatn({
   variable: "--font-vazirmatn",
   subsets: ["arabic", "latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-});
-
-const jetbrains = JetBrains_Mono({
-  variable: "--font-jetbrains",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Pulse — Live chat systems",
-  description:
-    "Three realtime chat systems: Direct, Rooms, and Groups. Built as a full-stack resume project with Drizzle and SSE.",
+  title: "Pulse",
+  description: "Private messaging, rooms, and groups — live.",
 };
 
 async function getHtmlLocale(): Promise<Locale> {
@@ -59,7 +57,7 @@ export default async function RootLayout({
       lang={locale}
       dir={dir}
       data-locale={locale}
-      className={`${unbounded.variable} ${manrope.variable} ${vazirmatn.variable} ${jetbrains.variable} h-full antialiased`}
+      className={`${instrument.variable} ${jakarta.variable} ${vazirmatn.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body

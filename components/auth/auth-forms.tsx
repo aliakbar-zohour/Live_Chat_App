@@ -66,7 +66,7 @@ export function LoginForm() {
           {t.auth.newHere}{" "}
           <LocaleLink
             href="/register"
-            className="text-signal underline-offset-4 hover:underline"
+            className="text-bone underline-offset-4 hover:underline"
           >
             {t.auth.createLink}
           </LocaleLink>
@@ -149,7 +149,7 @@ export function RegisterForm() {
           {t.auth.alreadyLive}{" "}
           <LocaleLink
             href="/login"
-            className="text-signal underline-offset-4 hover:underline"
+            className="text-bone underline-offset-4 hover:underline"
           >
             {t.auth.signInLink}
           </LocaleLink>
