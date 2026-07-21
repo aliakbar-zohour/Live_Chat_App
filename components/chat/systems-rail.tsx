@@ -71,7 +71,7 @@ export function SystemsRail({
                 className={cn(
                   "group flex items-center gap-3 rounded-[var(--ds-radius-sm)] px-2.5 py-3 transition-colors",
                   active
-                    ? "bg-signal text-signal-ink"
+                    ? "bg-signal text-onsignal"
                     : "text-bone hover:bg-ink-soft",
                 )}
               >
@@ -83,7 +83,7 @@ export function SystemsRail({
                   <span
                     className={cn(
                       "block text-xs",
-                      active ? "text-signal-ink/70" : "text-mist",
+                      active ? "text-onsignal/80" : "text-mist",
                     )}
                   >
                     {system.hint}

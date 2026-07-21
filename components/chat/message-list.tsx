@@ -52,7 +52,7 @@ export function MessageList({
                   className={cn(
                     "rounded-[var(--ds-radius-md)] px-3.5 py-2.5 text-[0.98rem] leading-relaxed",
                     mine
-                      ? "bg-signal text-signal-ink"
+                      ? "bg-signal text-onsignal"
                       : "border border-line bg-ink-soft text-bone",
                   )}
                 >

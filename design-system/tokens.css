@@ -4,34 +4,34 @@
  * Single source of truth for visual language. Prefer these tokens over
  * one-off values so future features stay visually in sync.
  *
+ * Direction: deep navy + ice + electric blue (not purple, not cream).
+ *
  * Breakpoints (mobile-first):
  *   sm  640px   — large phones / small tablets
  *   md  768px   — tablets
  *   lg  1024px  — desktop (chat shell becomes 3-pane)
  *   xl  1280px  — wide desktop
- *
- * Three primary layouts to design against: phone, tablet, desktop.
- * Everything between those sizes should flex fluidly with clamp() and
- * container queries where needed.
  */
 
 :root {
-  /* Brand */
   --ds-brand: "Pulse";
 
-  /* Color — ink / bone / signal (acid lime). Avoid purple & cream clichés. */
-  --ds-ink: #070708;
-  --ds-ink-elevated: #111114;
-  --ds-ink-soft: #1b1b20;
-  --ds-bone: #f2efe6;
-  --ds-bone-muted: #cfc9bb;
-  --ds-mist: #8d8990;
-  --ds-line: rgba(242, 239, 230, 0.12);
-  --ds-line-strong: rgba(242, 239, 230, 0.22);
-  --ds-signal: #c8f542;
-  --ds-signal-ink: #0b1200;
-  --ds-danger: #ff5c5c;
-  --ds-success: #5dffa8;
+  /* Color — midnight navy / ice / electric blue
+     Filled controls use white on signal (high contrast). */
+  --ds-ink: #050a14;
+  --ds-ink-elevated: #0b1528;
+  --ds-ink-soft: #132038;
+  --ds-bone: #f3f7ff;
+  --ds-bone-muted: #b7c6e0;
+  --ds-mist: #8496b4;
+  --ds-line: rgba(170, 200, 255, 0.14);
+  --ds-line-strong: rgba(170, 200, 255, 0.32);
+  --ds-signal: #2f7bff;
+  --ds-signal-bright: #79b0ff;
+  --ds-on-signal: #ffffff;
+  --ds-glow: #5ec8ff;
+  --ds-danger: #ff6b7a;
+  --ds-success: #3ee0a5;
 
   --ds-bg: var(--ds-ink);
   --ds-bg-elevated: var(--ds-ink-elevated);
@@ -39,25 +39,25 @@
   --ds-fg: var(--ds-bone);
   --ds-fg-muted: var(--ds-mist);
   --ds-accent: var(--ds-signal);
-  --ds-accent-fg: var(--ds-signal-ink);
+  --ds-accent-fg: var(--ds-on-signal);
 
-  /* Typography */
-  --ds-font-display: var(--font-syne), "Syne", sans-serif;
-  --ds-font-body: var(--font-outfit), "Outfit", sans-serif;
+  /* Typography — Unbounded display + Manrope body */
+  --ds-font-display: var(--font-unbounded), "Unbounded", sans-serif;
+  --ds-font-body: var(--font-manrope), "Manrope", sans-serif;
   --ds-font-mono: var(--font-jetbrains), "JetBrains Mono", monospace;
 
   --ds-text-xs: clamp(0.7rem, 0.65rem + 0.2vw, 0.75rem);
   --ds-text-sm: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
   --ds-text-md: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
-  --ds-text-lg: clamp(1.15rem, 1rem + 0.6vw, 1.4rem);
-  --ds-text-xl: clamp(1.6rem, 1.2rem + 1.4vw, 2.4rem);
-  --ds-text-hero: clamp(2.6rem, 1.4rem + 5vw, 6.5rem);
+  --ds-text-lg: clamp(1.15rem, 1rem + 0.55vw, 1.35rem);
+  --ds-text-xl: clamp(1.7rem, 1.2rem + 1.5vw, 2.6rem);
+  --ds-text-hero: clamp(2.8rem, 1.2rem + 6vw, 7.2rem);
 
-  --ds-leading-tight: 0.92;
-  --ds-leading-snug: 1.15;
-  --ds-leading-body: 1.55;
-  --ds-tracking-display: -0.04em;
-  --ds-tracking-wide: 0.14em;
+  --ds-leading-tight: 0.94;
+  --ds-leading-snug: 1.18;
+  --ds-leading-body: 1.6;
+  --ds-tracking-display: -0.035em;
+  --ds-tracking-wide: 0.16em;
 
   /* Space */
   --ds-space-1: 0.25rem;
@@ -70,52 +70,52 @@
   --ds-space-8: 4.5rem;
   --ds-space-9: 7rem;
 
-  --ds-page-x: clamp(1rem, 3vw, 3rem);
+  --ds-page-x: clamp(1.1rem, 4vw, 4.5rem);
   --ds-page-y: clamp(1rem, 2.5vw, 2.5rem);
   --ds-chat-rail: clamp(16rem, 24vw, 22rem);
 
-  /* Radius — sharp editorial, not pill-heavy */
   --ds-radius-xs: 2px;
-  --ds-radius-sm: 6px;
-  --ds-radius-md: 12px;
-  --ds-radius-lg: 20px;
+  --ds-radius-sm: 8px;
+  --ds-radius-md: 14px;
+  --ds-radius-lg: 24px;
 
-  /* Elevation / effects */
-  --ds-shadow-soft: 0 24px 80px rgba(0, 0, 0, 0.45);
+  --ds-shadow-soft: 0 30px 90px rgba(4, 16, 40, 0.55);
+  --ds-shadow-glow: 0 0 80px rgba(76, 154, 255, 0.28);
   --ds-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
-  --ds-grid-line: rgba(242, 239, 230, 0.045);
+  --ds-grid-line: rgba(170, 200, 255, 0.05);
 
-  /* Motion */
   --ds-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ds-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --ds-duration-fast: 160ms;
   --ds-duration: 420ms;
-  --ds-duration-slow: 800ms;
+  --ds-duration-slow: 900ms;
 
-  /* Components */
-  --ds-control-h: 2.75rem;
-  --ds-control-h-lg: 3.25rem;
+  --ds-control-h: 2.85rem;
+  --ds-control-h-lg: 3.4rem;
   --ds-composer-h: 3.5rem;
   --ds-z-nav: 40;
   --ds-z-overlay: 50;
   --ds-z-toast: 60;
 }
 
+/* Hex literals so Tailwind utilities resolve reliably (no nested var issues). */
 @theme inline {
-  --color-ink: var(--ds-ink);
-  --color-ink-elevated: var(--ds-ink-elevated);
-  --color-ink-soft: var(--ds-ink-soft);
-  --color-bone: var(--ds-bone);
-  --color-bone-muted: var(--ds-bone-muted);
-  --color-mist: var(--ds-mist);
-  --color-line: var(--ds-line);
-  --color-line-strong: var(--ds-line-strong);
-  --color-signal: var(--ds-signal);
-  --color-signal-ink: var(--ds-signal-ink);
-  --color-danger: var(--ds-danger);
-  --color-success: var(--ds-success);
-  --color-background: var(--ds-bg);
-  --color-foreground: var(--ds-fg);
+  --color-ink: #050a14;
+  --color-ink-elevated: #0b1528;
+  --color-ink-soft: #132038;
+  --color-bone: #f3f7ff;
+  --color-bone-muted: #b7c6e0;
+  --color-mist: #8496b4;
+  --color-line: #aaccff24;
+  --color-line-strong: #aaccff52;
+  --color-signal: #2f7bff;
+  --color-signal-bright: #79b0ff;
+  --color-onsignal: #ffffff;
+  --color-glow: #5ec8ff;
+  --color-danger: #ff6b7a;
+  --color-success: #3ee0a5;
+  --color-background: #050a14;
+  --color-foreground: #f3f7ff;
   --font-display: var(--ds-font-display);
   --font-sans: var(--ds-font-body);
   --font-mono: var(--ds-font-mono);
