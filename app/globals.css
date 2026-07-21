@@ -41,9 +41,28 @@ textarea {
   font: inherit;
 }
 
-:focus-visible {
-  outline: 2px solid var(--ds-signal-bright);
-  outline-offset: 3px;
+/* No focus outlines / focus border rings anywhere */
+:focus,
+:focus-visible,
+:focus-within {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+button:focus,
+button:focus-visible,
+a:focus,
+a:focus-visible,
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+select:focus,
+select:focus-visible,
+[tabindex]:focus,
+[tabindex]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Solid button surfaces — CSS vars, not fragile utility chains */
@@ -119,6 +138,29 @@ textarea {
 .ds-link-primary {
   background-color: var(--ds-bone);
   color: var(--ds-ink);
+}
+
+/* Persian typography + RTL rhythm */
+body.is-fa {
+  font-family: var(--font-vazirmatn), "Vazirmatn", sans-serif;
+  letter-spacing: 0;
+}
+
+body.is-fa .ds-display,
+body.is-fa .font-display {
+  font-family: var(--font-vazirmatn), "Vazirmatn", sans-serif;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+
+body.is-fa .ds-kicker,
+body.is-fa .font-mono {
+  font-family: var(--font-vazirmatn), "Vazirmatn", sans-serif;
+  letter-spacing: 0.08em;
+}
+
+html[dir="rtl"] .ds-display {
+  line-height: 1.15;
 }
 
 .ds-grain {

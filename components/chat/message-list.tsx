@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Avatar } from "@/components/ui/avatar";
+import { useDictionary } from "@/components/i18n/locale-provider";
 import type { ChatMessagePayload } from "@/lib/realtime";
 import { cn, formatTime } from "@/lib/utils";
 
@@ -12,6 +13,8 @@ export function MessageList({
   messages: ChatMessagePayload[];
   currentUserId: string;
 }) {
+  const t = useDictionary();
+
   return (
     <div className="ds-scroll flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-5 md:px-6">
       <AnimatePresence initial={false}>
@@ -26,7 +29,7 @@ export function MessageList({
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className={cn(
                 "flex max-w-[min(100%,36rem)] gap-3",
-                mine ? "ml-auto flex-row-reverse" : "mr-auto",
+                mine ? "ms-auto flex-row-reverse" : "me-auto",
               )}
             >
               <Avatar
@@ -34,7 +37,7 @@ export function MessageList({
                 image={message.sender.image}
                 size="sm"
               />
-              <div className={cn("min-w-0", mine && "text-right")}>
+              <div className={cn("min-w-0", mine && "text-end")}>
                 <div
                   className={cn(
                     "mb-1 flex items-baseline gap-2 text-xs text-mist",
@@ -42,7 +45,7 @@ export function MessageList({
                   )}
                 >
                   <span className="font-medium text-bone/80">
-                    {mine ? "You" : message.sender.name}
+                    {mine ? t.chat.you : message.sender.name}
                   </span>
                   <time dateTime={message.createdAt}>
                     {formatTime(message.createdAt)}
@@ -65,9 +68,9 @@ export function MessageList({
       </AnimatePresence>
       {messages.length === 0 ? (
         <div className="m-auto max-w-sm text-center">
-          <p className="ds-kicker mb-3">No signal yet</p>
+          <p className="ds-kicker mb-3">{t.chat.noSignal}</p>
           <p className="font-display text-2xl text-bone">
-            Send the first transmission.
+            {t.chat.firstTransmission}
           </p>
         </div>
       ) : null}

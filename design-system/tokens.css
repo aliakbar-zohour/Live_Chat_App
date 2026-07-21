@@ -44,6 +44,7 @@
   /* Typography — Unbounded display + Manrope body */
   --ds-font-display: var(--font-unbounded), "Unbounded", sans-serif;
   --ds-font-body: var(--font-manrope), "Manrope", sans-serif;
+  --ds-font-fa: var(--font-vazirmatn), "Vazirmatn", sans-serif;
   --ds-font-mono: var(--font-jetbrains), "JetBrains Mono", monospace;
 
   --ds-text-xs: clamp(0.7rem, 0.65rem + 0.2vw, 0.75rem);

@@ -7,45 +7,48 @@ import {
 import { requireSession } from "@/lib/session";
 import { ChatThread } from "@/components/chat/chat-thread";
 import { ConversationList } from "@/components/chat/conversation-list";
-import { DirectCreatePanel } from "@/components/chat/create-panels";
+import { RoomCreatePanel } from "@/components/chat/create-panels";
+import { isLocale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/get-dictionary";
 
-export default async function DirectThreadPage({
+export default async function RoomThreadPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ lang: string; id: string }>;
 }) {
-  const { id } = await params;
+  const { lang, id } = await params;
+  if (!isLocale(lang)) notFound();
+  const dict = await getDictionary(lang);
   const session = await requireSession();
   const conversation = await getConversationForUser(id, session.user.id);
 
-  if (!conversation || conversation.type !== "direct") {
+  if (!conversation || conversation.type !== "room") {
     notFound();
   }
 
   const [messages, conversations] = await Promise.all([
     getMessages(id),
-    listConversations(session.user.id, "direct"),
+    listConversations(session.user.id, "room"),
   ]);
 
   return (
     <div className="flex h-full min-h-0">
-      <div className="hidden w-[var(--ds-chat-rail)] shrink-0 flex-col border-r border-line bg-ink-elevated md:flex">
-        <DirectCreatePanel />
+      <div className="hidden w-[var(--ds-chat-rail)] shrink-0 flex-col border-e border-line bg-ink-elevated md:flex">
+        <RoomCreatePanel />
         <ConversationList
-          system="direct"
+          system="room"
           items={conversations}
-          emptyLabel="Search someone above to open a private thread."
+          emptyLabel={dict.chat.roomsEmpty}
         />
       </div>
       <ChatThread
         conversationId={conversation.id}
         title={conversation.displayTitle}
         subtitle={
-          conversation.peer
-            ? `@${conversation.peer.handle} · private channel`
-            : "Private channel"
+          conversation.description ??
+          `#${conversation.slug ?? "room"} · ${conversation.members.length} ${dict.chat.members}`
         }
-        systemLabel="Direct"
+        systemLabel={dict.chat.rooms}
         currentUserId={session.user.id}
         initialMessages={messages}
       />

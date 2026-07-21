@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input, Textarea } from "@/components/ui/input";
 import { Avatar } from "@/components/ui/avatar";
+import { useDictionary, useLocale } from "@/components/i18n/locale-provider";
+import { localizedPath } from "@/i18n/path";
 
 type UserHit = {
   id: string;
@@ -17,6 +19,8 @@ type UserHit = {
 
 export function DirectCreatePanel() {
   const router = useRouter();
+  const { locale } = useLocale();
+  const t = useDictionary();
   const [query, setQuery] = useState("");
   const [users, setUsers] = useState<UserHit[]>([]);
   const [pending, setPending] = useState(false);
@@ -50,7 +54,7 @@ export function DirectCreatePanel() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Failed");
-      router.push(`/chat/direct/${data.id}`);
+      router.push(localizedPath(locale, `/chat/direct/${data.id}`));
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed");
@@ -61,11 +65,11 @@ export function DirectCreatePanel() {
 
   return (
     <div className="border-b border-line p-4">
-      <Field label="Start a direct">
+      <Field label={t.chat.startDirect}>
         <Input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search people by name or @handle"
+          placeholder={t.chat.searchPeople}
         />
       </Field>
       {error ? <p className="mt-2 text-sm text-danger">{error}</p> : null}
@@ -76,7 +80,7 @@ export function DirectCreatePanel() {
               type="button"
               disabled={pending}
               onClick={() => void startDirect(person.id)}
-              className="flex w-full items-center gap-3 rounded-[var(--ds-radius-sm)] px-2 py-2 text-left hover:bg-ink-soft"
+              className="flex w-full items-center gap-3 rounded-[var(--ds-radius-sm)] px-2 py-2 text-start hover:bg-ink-soft"
             >
               <Avatar name={person.name} image={person.image} size="sm" />
               <span className="min-w-0">
@@ -95,6 +99,8 @@ export function DirectCreatePanel() {
 
 export function RoomCreatePanel() {
   const router = useRouter();
+  const { locale } = useLocale();
+  const t = useDictionary();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [pending, setPending] = useState(false);
@@ -133,7 +139,7 @@ export function RoomCreatePanel() {
       if (!response.ok) throw new Error(data.error ?? "Failed");
       setTitle("");
       setDescription("");
-      router.push(`/chat/rooms/${data.id}`);
+      router.push(localizedPath(locale, `/chat/rooms/${data.id}`));
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed");
@@ -153,34 +159,34 @@ export function RoomCreatePanel() {
       setError(data.error ?? "Failed to join");
       return;
     }
-    router.push(`/chat/rooms/${data.id}`);
+    router.push(localizedPath(locale, `/chat/rooms/${data.id}`));
     router.refresh();
   }
 
   return (
     <div className="space-y-4 border-b border-line p-4">
       <form onSubmit={onCreate} className="space-y-3">
-        <Field label="Create room">
+        <Field label={t.chat.createRoom}>
           <Input
             value={title}
             onChange={(event) => setTitle(event.target.value)}
-            placeholder="Room title"
+            placeholder={t.chat.roomTitle}
             required
           />
         </Field>
         <Textarea
           value={description}
           onChange={(event) => setDescription(event.target.value)}
-          placeholder="What is this room for?"
+          placeholder={t.chat.roomPurpose}
         />
         {error ? <p className="text-sm text-danger">{error}</p> : null}
         <Button type="submit" variant="signal" disabled={pending} className="w-full">
-          Open room
+          {t.chat.openRoom}
         </Button>
       </form>
 
       <div>
-        <p className="ds-kicker mb-2">Discover</p>
+        <p className="ds-kicker mb-2">{t.chat.discover}</p>
         <ul className="max-h-40 space-y-1 overflow-y-auto">
           {discover.map((room) => (
             <li
@@ -190,16 +196,18 @@ export function RoomCreatePanel() {
               <div className="min-w-0">
                 <p className="truncate text-sm">{room.title}</p>
                 <p className="truncate text-xs text-mist">
-                  {room.description ?? "Public room"}
+                  {room.description ?? t.chat.publicRoom}
                 </p>
               </div>
               {room.joined ? (
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => router.push(`/chat/rooms/${room.id}`)}
+                  onClick={() =>
+                    router.push(localizedPath(locale, `/chat/rooms/${room.id}`))
+                  }
                 >
-                  Open
+                  {t.chat.open}
                 </Button>
               ) : (
                 <Button
@@ -207,7 +215,7 @@ export function RoomCreatePanel() {
                   variant="line"
                   onClick={() => void join(room.id)}
                 >
-                  Join
+                  {t.chat.join}
                 </Button>
               )}
             </li>
@@ -220,6 +228,8 @@ export function RoomCreatePanel() {
 
 export function GroupCreatePanel() {
   const router = useRouter();
+  const { locale } = useLocale();
+  const t = useDictionary();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [inviteCode, setInviteCode] = useState("");
@@ -238,7 +248,7 @@ export function GroupCreatePanel() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Failed");
-      router.push(`/chat/groups/${data.id}`);
+      router.push(localizedPath(locale, `/chat/groups/${data.id}`));
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed");
@@ -259,7 +269,7 @@ export function GroupCreatePanel() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Failed");
-      router.push(`/chat/groups/${data.id}`);
+      router.push(localizedPath(locale, `/chat/groups/${data.id}`));
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed");
@@ -271,35 +281,35 @@ export function GroupCreatePanel() {
   return (
     <div className="space-y-5 border-b border-line p-4">
       <form onSubmit={onCreate} className="space-y-3">
-        <Field label="Create group">
+        <Field label={t.chat.createGroup}>
           <Input
             value={title}
             onChange={(event) => setTitle(event.target.value)}
-            placeholder="Group name"
+            placeholder={t.chat.groupName}
             required
           />
         </Field>
         <Textarea
           value={description}
           onChange={(event) => setDescription(event.target.value)}
-          placeholder="Private purpose"
+          placeholder={t.chat.privatePurpose}
         />
         <Button type="submit" variant="signal" disabled={pending} className="w-full">
-          Create group
+          {t.chat.createGroup}
         </Button>
       </form>
 
       <form onSubmit={onJoin} className="space-y-3">
-        <Field label="Join with invite">
+        <Field label={t.chat.joinInvite}>
           <Input
             value={inviteCode}
             onChange={(event) => setInviteCode(event.target.value)}
-            placeholder="Invite code"
+            placeholder={t.chat.inviteCode}
             required
           />
         </Field>
         <Button type="submit" variant="line" disabled={pending} className="w-full">
-          Enter group
+          {t.chat.enterGroup}
         </Button>
       </form>
       {error ? <p className="text-sm text-danger">{error}</p> : null}

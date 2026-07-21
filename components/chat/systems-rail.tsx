@@ -1,36 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Hash, LogOut, MessagesSquare, Radio, Users } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-
-const systems = [
-  {
-    key: "direct",
-    href: "/chat/direct",
-    label: "Direct",
-    hint: "Private 1:1",
-    icon: MessagesSquare,
-  },
-  {
-    key: "rooms",
-    href: "/chat/rooms",
-    label: "Rooms",
-    hint: "Open channels",
-    icon: Hash,
-  },
-  {
-    key: "groups",
-    href: "/chat/groups",
-    label: "Groups",
-    hint: "Invite only",
-    icon: Users,
-  },
-] as const;
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
+import { LocaleLink } from "@/components/i18n/locale-link";
+import { useDictionary, useLocale } from "@/components/i18n/locale-provider";
+import { localizedPath, stripLocaleFromPathname } from "@/i18n/path";
 
 export function SystemsRail({
   user,
@@ -44,28 +23,55 @@ export function SystemsRail({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { locale } = useLocale();
+  const t = useDictionary();
+  const { pathnameWithoutLocale } = stripLocaleFromPathname(pathname);
+
+  const systems = [
+    {
+      key: "direct",
+      href: "/chat/direct",
+      label: t.chat.direct,
+      hint: t.chat.directHint,
+      icon: MessagesSquare,
+    },
+    {
+      key: "rooms",
+      href: "/chat/rooms",
+      label: t.chat.rooms,
+      hint: t.chat.roomsHint,
+      icon: Hash,
+    },
+    {
+      key: "groups",
+      href: "/chat/groups",
+      label: t.chat.groups,
+      hint: t.chat.groupsHint,
+      icon: Users,
+    },
+  ] as const;
 
   return (
     <>
-      <aside className="hidden h-full w-[5.25rem] shrink-0 flex-col border-r border-line bg-ink-elevated lg:flex xl:w-[16rem]">
+      <aside className="hidden h-full w-[5.25rem] shrink-0 flex-col border-e border-line bg-ink-elevated lg:flex xl:w-[16rem]">
         <div className="border-b border-line px-3 py-4 xl:px-5">
-          <Link href="/chat" className="flex items-center gap-2">
+          <LocaleLink href="/chat" className="flex items-center gap-2">
             <span className="ds-live-dot" />
             <span className="font-display text-lg tracking-tight xl:text-xl">
               Pulse
             </span>
-          </Link>
+          </LocaleLink>
           <p className="mt-2 hidden text-xs text-mist xl:block">
-            Three live systems. One signal.
+            {t.chat.brandHint}
           </p>
         </div>
 
         <nav className="flex flex-1 flex-col gap-1 p-2 xl:p-3">
           {systems.map((system) => {
-            const active = pathname.startsWith(system.href);
+            const active = pathnameWithoutLocale.startsWith(system.href);
             const Icon = system.icon;
             return (
-              <Link
+              <LocaleLink
                 key={system.key}
                 href={system.href}
                 className={cn(
@@ -89,12 +95,15 @@ export function SystemsRail({
                     {system.hint}
                   </span>
                 </span>
-              </Link>
+              </LocaleLink>
             );
           })}
         </nav>
 
         <div className="mt-auto border-t border-line p-3">
+          <div className="mb-3 hidden xl:block">
+            <LanguageSwitcher compact className="w-full justify-between" />
+          </div>
           <div className="mb-3 hidden items-center gap-3 xl:flex">
             <Avatar name={user.name} image={user.image} />
             <div className="min-w-0">
@@ -110,42 +119,45 @@ export function SystemsRail({
             className="w-full justify-center xl:justify-start"
             onClick={async () => {
               await authClient.signOut();
-              router.push("/login");
+              router.push(localizedPath(locale, "/login"));
               router.refresh();
             }}
           >
             <LogOut className="h-4 w-4" />
-            <span className="hidden xl:inline">Sign out</span>
+            <span className="hidden xl:inline">{t.chat.signOut}</span>
           </Button>
         </div>
       </aside>
 
       <nav className="fixed inset-x-0 bottom-0 z-[var(--ds-z-nav)] grid grid-cols-3 border-t border-line bg-ink/95 backdrop-blur-md lg:hidden">
         {systems.map((system) => {
-          const active = pathname.startsWith(system.href);
+          const active = pathnameWithoutLocale.startsWith(system.href);
           const Icon = system.icon;
           return (
-            <Link
+            <LocaleLink
               key={system.key}
               href={system.href}
               className={cn(
-                "flex flex-col items-center gap-1 px-2 py-3 text-[11px] uppercase tracking-[0.12em]",
+                "flex flex-col items-center gap-1 px-2 py-3 text-[11px] tracking-[0.08em]",
                 active ? "text-signal" : "text-mist",
               )}
             >
               <Icon className="h-4 w-4" />
               {system.label}
-            </Link>
+            </LocaleLink>
           );
         })}
       </nav>
 
-      <div className="flex items-center justify-between border-b border-line px-4 py-3 lg:hidden">
-        <Link href="/chat" className="flex items-center gap-2">
+      <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3 lg:hidden">
+        <LocaleLink href="/chat" className="flex items-center gap-2">
           <Radio className="h-4 w-4 text-signal" />
           <span className="font-display text-lg">Pulse</span>
-        </Link>
-        <Avatar name={user.name} image={user.image} size="sm" />
+        </LocaleLink>
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher compact />
+          <Avatar name={user.name} image={user.image} size="sm" />
+        </div>
       </div>
     </>
   );

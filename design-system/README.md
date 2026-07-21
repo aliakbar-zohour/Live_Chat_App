@@ -28,11 +28,12 @@ Do **not** introduce purple gradients, cream/terracotta pairings, or broadsheet 
 
 ## Typography
 
-- Display / brand / section titles → `font-display` (**Unbounded**)
-- Body / UI → `font-sans` (**Manrope**)
-- Codes / invites / handles → `font-mono` (**JetBrains Mono**)
+- Display / brand / section titles → `font-display` (**Unbounded**) in English
+- Body / UI → `font-sans` (**Manrope**) in English
+- **Persian (`fa`)** → **Vazirmatn** for display + body (via `body.is-fa`)
+- Codes / invites / handles → `font-mono` (**JetBrains Mono**) in English; Vazirmatn in Persian
 
-Hero titles use `--ds-text-hero` with tight leading and negative tracking.
+When `dir="rtl"` and locale is `fa`, the entire layout flips with logical CSS (`ms`/`me`/`ps`/`pe`/`border-e`).
 
 ## Layout & breakpoints
 

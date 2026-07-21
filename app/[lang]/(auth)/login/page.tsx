@@ -1,21 +1,30 @@
-import Link from "next/link";
+"use client";
+
 import { LoginForm } from "@/components/auth/auth-forms";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
+import { LocaleLink } from "@/components/i18n/locale-link";
+import { useDictionary } from "@/components/i18n/locale-provider";
 
 export default function LoginPage() {
+  const t = useDictionary();
+
   return (
     <main className="ds-grain ds-grid-bg relative flex min-h-screen items-center justify-center px-[var(--ds-page-x)] py-16">
+      <div className="absolute inset-x-0 top-0 flex justify-end px-[var(--ds-page-x)] py-5">
+        <LanguageSwitcher compact />
+      </div>
       <div className="relative z-[2] w-full max-w-md">
-        <Link href="/" className="mb-10 inline-flex items-center gap-2">
+        <LocaleLink href="/" className="mb-10 inline-flex items-center gap-2">
           <span className="ds-live-dot" />
           <span className="font-display text-2xl tracking-tight">Pulse</span>
-        </Link>
-        <p className="ds-kicker mb-3">Access</p>
+        </LocaleLink>
+        <p className="ds-kicker mb-3">{t.auth.access}</p>
         <h1 className="ds-display mb-8 text-4xl md:text-5xl">
-          Sign in to your signal.
+          {t.auth.loginTitle}
         </h1>
         <LoginForm />
         <p className="mt-8 border-t border-line pt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-mist">
-          Demo · alex@pulse.chat / password123
+          {t.auth.demoHint}
         </p>
       </div>
     </main>

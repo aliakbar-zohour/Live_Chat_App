@@ -1,11 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Hash, MessagesSquare, Users } from "lucide-react";
 import { cn, formatRelative } from "@/lib/utils";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { LocaleLink } from "@/components/i18n/locale-link";
+import { useDictionary } from "@/components/i18n/locale-provider";
+import { stripLocaleFromPathname } from "@/i18n/path";
 
 export type ConversationListItem = {
   id: string;
@@ -27,24 +29,6 @@ export type ConversationListItem = {
   members?: Array<{ userId?: string; id?: string; name: string }>;
 };
 
-const meta = {
-  direct: {
-    href: "/chat/direct",
-    icon: MessagesSquare,
-    label: "Direct",
-  },
-  room: {
-    href: "/chat/rooms",
-    icon: Hash,
-    label: "Rooms",
-  },
-  group: {
-    href: "/chat/groups",
-    icon: Users,
-    label: "Groups",
-  },
-} as const;
-
 export function ConversationList({
   items,
   system,
@@ -55,13 +39,34 @@ export function ConversationList({
   emptyLabel: string;
 }) {
   const pathname = usePathname();
+  const t = useDictionary();
+  const { pathnameWithoutLocale } = stripLocaleFromPathname(pathname);
+
+  const meta = {
+    direct: {
+      href: "/chat/direct",
+      icon: MessagesSquare,
+      label: t.chat.direct,
+    },
+    room: {
+      href: "/chat/rooms",
+      icon: Hash,
+      label: t.chat.rooms,
+    },
+    group: {
+      href: "/chat/groups",
+      icon: Users,
+      label: t.chat.groups,
+    },
+  } as const;
+
   const Icon = meta[system].icon;
 
   return (
     <div className="ds-scroll flex h-full flex-col overflow-y-auto">
       <div className="sticky top-0 z-10 border-b border-line bg-ink-elevated/95 px-4 py-4 backdrop-blur">
         <p className="ds-kicker mb-1">{meta[system].label}</p>
-        <h2 className="font-display text-xl tracking-tight">Threads</h2>
+        <h2 className="font-display text-xl tracking-tight">{t.chat.threads}</h2>
       </div>
 
       {items.length === 0 ? (
@@ -73,10 +78,10 @@ export function ConversationList({
         <ul className="flex flex-col p-2">
           {items.map((item) => {
             const href = `${meta[system].href}/${item.id}`;
-            const active = pathname === href;
+            const active = pathnameWithoutLocale === href;
             return (
               <li key={item.id}>
-                <Link
+                <LocaleLink
                   href={href}
                   className={cn(
                     "group flex items-start gap-3 rounded-[var(--ds-radius-sm)] px-3 py-3 transition-colors",
@@ -108,15 +113,17 @@ export function ConversationList({
                     <p className="truncate text-sm text-mist">
                       {item.latestMessage?.body ??
                         item.description ??
-                        "No messages yet"}
+                        t.chat.noMessages}
                     </p>
                     {system === "group" && item.inviteCode ? (
                       <div className="mt-2">
-                        <Badge tone="signal">invite · {item.inviteCode}</Badge>
+                        <Badge tone="signal">
+                          {t.chat.code} · {item.inviteCode}
+                        </Badge>
                       </div>
                     ) : null}
                   </div>
-                </Link>
+                </LocaleLink>
               </li>
             );
           })}

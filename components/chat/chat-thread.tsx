@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { MessageComposer } from "@/components/chat/message-composer";
 import { MessageList } from "@/components/chat/message-list";
 import { useLiveMessages } from "@/components/chat/use-chat-stream";
+import { useDictionary } from "@/components/i18n/locale-provider";
 import type { ChatMessagePayload } from "@/lib/realtime";
 
 export function ChatThread({
@@ -24,6 +25,7 @@ export function ChatThread({
   initialMessages: ChatMessagePayload[];
   inviteCode?: string | null;
 }) {
+  const t = useDictionary();
   const { messages, connected } = useLiveMessages(
     conversationId,
     initialMessages,
@@ -41,9 +43,13 @@ export function ChatThread({
           <div className="mb-2 flex flex-wrap items-center gap-2">
             <Badge tone="signal">{systemLabel}</Badge>
             <Badge tone={connected ? "signal" : "mist"}>
-              {connected ? "live" : "reconnecting"}
+              {connected ? t.chat.live : t.chat.reconnecting}
             </Badge>
-            {inviteCode ? <Badge tone="bone">code · {inviteCode}</Badge> : null}
+            {inviteCode ? (
+              <Badge tone="bone">
+                {t.chat.code} · {inviteCode}
+              </Badge>
+            ) : null}
           </div>
           <h1 className="truncate font-display text-2xl tracking-tight md:text-3xl">
             {title}

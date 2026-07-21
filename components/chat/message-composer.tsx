@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useDictionary } from "@/components/i18n/locale-provider";
 import { cn } from "@/lib/utils";
 
 export function MessageComposer({
@@ -12,6 +13,7 @@ export function MessageComposer({
   conversationId: string;
   onOptimistic?: (body: string) => void;
 }) {
+  const t = useDictionary();
   const [body, setBody] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,7 +53,7 @@ export function MessageComposer({
     >
       <div
         className={cn(
-          "flex items-end gap-2 rounded-[var(--ds-radius-md)] border border-line bg-ink-elevated p-2 transition-colors focus-within:border-signal/60",
+          "flex items-end gap-2 rounded-[var(--ds-radius-md)] border border-line bg-ink-elevated p-2",
         )}
       >
         <textarea
@@ -64,7 +66,7 @@ export function MessageComposer({
             }
           }}
           rows={1}
-          placeholder="Write a live message…"
+          placeholder={t.chat.writeMessage}
           className="max-h-36 min-h-[2.75rem] flex-1 resize-none bg-transparent px-2 py-2 text-bone outline-none placeholder:text-mist/70"
         />
         <Button
@@ -74,7 +76,7 @@ export function MessageComposer({
           disabled={pending || !body.trim()}
           className="shrink-0"
         >
-          Send
+          {t.chat.send}
           <ArrowUpRight className="h-4 w-4" />
         </Button>
       </div>

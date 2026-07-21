@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Manrope, Unbounded } from "next/font/google";
+import { cookies } from "next/headers";
+import { JetBrains_Mono, Manrope, Unbounded, Vazirmatn } from "next/font/google";
+import {
+  defaultLocale,
+  getDirection,
+  isLocale,
+  LOCALE_COOKIE,
+  type Locale,
+} from "@/i18n/config";
 import "./globals.css";
 
 const unbounded = Unbounded({
@@ -11,6 +19,12 @@ const unbounded = Unbounded({
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
+
+const vazirmatn = Vazirmatn({
+  variable: "--font-vazirmatn",
+  subsets: ["arabic", "latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
 });
 
@@ -26,17 +40,33 @@ export const metadata: Metadata = {
     "Three realtime chat systems: Direct, Rooms, and Groups. Built as a full-stack resume project with Drizzle and SSE.",
 };
 
-export default function RootLayout({
+async function getHtmlLocale(): Promise<Locale> {
+  const jar = await cookies();
+  const value = jar.get(LOCALE_COOKIE)?.value;
+  return value && isLocale(value) ? value : defaultLocale;
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getHtmlLocale();
+  const dir = getDirection(locale);
+
   return (
     <html
-      lang="en"
-      className={`${unbounded.variable} ${manrope.variable} ${jetbrains.variable} h-full antialiased`}
+      lang={locale}
+      dir={dir}
+      data-locale={locale}
+      className={`${unbounded.variable} ${manrope.variable} ${vazirmatn.variable} ${jetbrains.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full bg-ink text-bone">{children}</body>
+      <body
+        className={`min-h-full bg-ink text-bone ${locale === "fa" ? "is-fa" : "is-en"}`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
